@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export const Login = () => {
   return (
@@ -27,7 +28,7 @@ export const Login = () => {
             htmlFor="password"
             className="block uppercase text-gray-600 text-lg font-bold"
           >
-            Email
+            Password
           </label>
           <input
             type="password"
@@ -42,6 +43,20 @@ export const Login = () => {
           value="Iniciar Sesión"
         />
       </form>
+      <nav className="lg:flex lg:justify-between">
+        <Link
+          to="registrar"
+          className="uppercase text-xs block text-center mt-5 text-slate-700"
+        >
+          ¿No tienes una cuenta? Regístrate
+        </Link>
+        <Link
+          to="olvide-password"
+          className="uppercase text-xs block text-center mt-5 text-slate-700"
+        >
+          ¿Olvidaste tu contraseña?
+        </Link>
+      </nav>
     </>
   );
 };

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Alerta } from '../components/Alerta';
+import clienteAxios from '../config/clienteAxios';
+import { toast, Slide } from 'react-toastify';
 
 const initialForm = {
   nombre: '',
@@ -11,7 +12,6 @@ const initialForm = {
 
 export const Registrar = () => {
   const [form, setForm] = useState(initialForm);
-  const [alerta, setAlerta] = useState({});
   const { nombre, email, password, repetirPassword } = form;
 
   const handleChange = ({ target }) => {
@@ -22,33 +22,61 @@ export const Registrar = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (Object.values(form).some((value) => value.trim() === '')) {
-      setAlerta({
-        error: true,
-        msg: 'Todos los campos son obligatorios',
+      toast.error('Todos los campos son obligatorios', {
+        transition: Slide,
+        theme: 'colored',
+        autoClose: 5000,
       });
       return;
     }
 
     if (password !== repetirPassword) {
-      setAlerta({
-        error: true,
-        msg: 'Las contraseñas no coinciden',
+      toast.error('Las contraseñas no coinciden', {
+        transition: Slide,
+        theme: 'colored',
+        autoClose: 5000,
       });
       return;
     }
 
     if (password.length < 6) {
-      setAlerta({
-        error: true,
-        msg: 'La contraseña debe tener al menos 6 caracteres',
+      toast.error('La contraseña debe tener al menos 6 caracteres', {
+        transition: Slide,
+        theme: 'colored',
+        autoClose: 5000,
       });
       return;
     }
 
-    setAlerta({});
+    try {
+      const { data } = await clienteAxios.post('/usuarios', {
+        nombre,
+        email,
+        password,
+      });
+
+      console.log(data);
+
+      toast.success(data.msg, {
+        transition: Slide,
+        theme: 'colored',
+        autoClose: 5000,
+      });
+
+      setTimeout(() => {
+        setAlerta({});
+      }, 5000);
+      setForm(initialForm);
+    } catch (error) {
+      toast.warning(error.response.data.msg, {
+        transition: Slide,
+        theme: 'colored',
+        autoClose: 5000,
+      });
+    }
   };
 
   return (
@@ -57,7 +85,6 @@ export const Registrar = () => {
         Crea tu cuenta y administra tus{' '}
         <span className="text-slate-700">proyectos</span>
       </h1>
-      {alerta.msg && <Alerta alerta={alerta} />}
       <form
         onSubmit={handleSubmit}
         className="mt-5 bg-white shadow rounded-lg p-6 md:p-8"
@@ -144,7 +171,7 @@ export const Registrar = () => {
           ¿Ya tienes una cuenta? Inicia Sesión
         </Link>
         <Link
-          to="olvide-password"
+          to="/olvide-password"
           className="uppercase text-xs block text-center mt-3 text-slate-700"
         >
           ¿Olvidaste tu contraseña?

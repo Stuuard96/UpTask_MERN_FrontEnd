@@ -1,4 +1,6 @@
 import { Outlet } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const AuthLayout = () => {
   return (
@@ -6,6 +8,7 @@ export const AuthLayout = () => {
       <div className="md:w-2/3 lg:w-2/5">
         <Outlet />
       </div>
+      <ToastContainer />
     </main>
   );
 };

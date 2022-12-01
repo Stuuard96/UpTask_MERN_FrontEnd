@@ -1,8 +1,8 @@
-import React from 'react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { toast, Slide } from 'react-toastify';
+import { Link, useNavigate } from 'react-router-dom';
 import clienteAxios from '../config/clienteAxios';
+import { useAuth } from '../hooks/useAuth';
+import { toast, Slide } from 'react-toastify';
 
 const initialForm = {
   email: '',
@@ -12,6 +12,8 @@ const initialForm = {
 export const Login = () => {
   const [form, setForm] = useState(initialForm);
   const { email, password } = form;
+  const { setAuth } = useAuth();
+  const navigate = useNavigate();
 
   const handleChange = ({ target }) => {
     const { name, value } = target;
@@ -38,12 +40,14 @@ export const Login = () => {
         password,
       });
       localStorage.setItem('token', data.token);
+      setAuth(data);
       toast.success('Inicio de sesión exitoso', {
         transition: Slide,
         theme: 'colored',
         autoClose: 5000,
       });
       setForm(initialForm);
+      navigate('/proyectos');
     } catch (error) {
       toast.error(error.response.data.msg, {
         transition: Slide,

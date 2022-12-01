@@ -1,11 +1,12 @@
 import { Route, Routes } from 'react-router-dom';
-import { AuthLayout } from '../layouts/AuthLayout';
+import { AuthLayout, RutaProtegida } from '../layouts';
 import {
   ConfirmarCuenta,
   Login,
   NuevoPassword,
   OlvidePassword,
   Registrar,
+  Proyectos,
 } from '../paginas';
 
 export const AppRouter = () => {
@@ -17,6 +18,10 @@ export const AppRouter = () => {
         <Route path="olvide-password" element={<OlvidePassword />} />
         <Route path="olvide-password/:token" element={<NuevoPassword />} />
         <Route path="confirmar/:id" element={<ConfirmarCuenta />} />
+      </Route>
+
+      <Route path="/proyectos" element={<RutaProtegida />}>
+        <Route index element={<Proyectos />} />
       </Route>
     </Routes>
   );

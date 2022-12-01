@@ -3,3 +3,4 @@ export * from './Registrar';
 export * from './OlvidePassword';
 export * from './NuevoPassword';
 export * from './ConfirmarCuenta';
+export * from './Proyectos';

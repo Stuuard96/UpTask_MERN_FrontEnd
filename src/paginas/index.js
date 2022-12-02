@@ -4,3 +4,4 @@ export * from './OlvidePassword';
 export * from './NuevoPassword';
 export * from './ConfirmarCuenta';
 export * from './Proyectos';
+export * from './NuevoProyecto';

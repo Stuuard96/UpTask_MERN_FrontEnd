@@ -1,12 +1,14 @@
 import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from './context/AuthProvider';
+import { AuthProvider, ProyectosProvider } from './context';
 import { AppRouter } from './router/AppRouter';
 
 export const UpTask = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <AppRouter />
+        <ProyectosProvider>
+          <AppRouter />
+        </ProyectosProvider>
       </AuthProvider>
     </BrowserRouter>
   );

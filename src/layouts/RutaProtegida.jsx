@@ -1,7 +1,8 @@
 import { Navigate, Outlet } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 import { Header } from '../components/Header';
 import { SideBar } from '../components/SideBar';
-import { useAuth } from '../hooks/useAuth';
+import { ToastContainer } from 'react-toastify';
 
 export const RutaProtegida = () => {
   const { auth, cargando } = useAuth();
@@ -17,6 +18,7 @@ export const RutaProtegida = () => {
             <main className="flex-1 p-8">
               <Outlet />
             </main>
+            <ToastContainer />
           </div>
         </div>
       ) : (

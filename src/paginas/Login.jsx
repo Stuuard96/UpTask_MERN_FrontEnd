@@ -35,10 +35,7 @@ export const Login = () => {
     }
 
     try {
-      const { data } = await clienteAxios.post('/usuarios/login', {
-        email,
-        password,
-      });
+      const { data } = await clienteAxios.post('/usuarios/login', form);
       localStorage.setItem('token', data.token);
       setAuth(data);
       toast.success('Inicio de sesión exitoso', {

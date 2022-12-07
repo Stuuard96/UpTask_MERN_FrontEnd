@@ -58,8 +58,6 @@ export const Registrar = () => {
         password,
       });
 
-      console.log(data);
-
       toast.success(data.msg, {
         transition: Slide,
         theme: 'colored',

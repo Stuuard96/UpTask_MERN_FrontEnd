@@ -8,6 +8,7 @@ import {
   Registrar,
   Proyectos,
   NuevoProyecto,
+  Proyecto,
 } from '../paginas';
 
 export const AppRouter = () => {
@@ -24,6 +25,7 @@ export const AppRouter = () => {
       <Route path="/proyectos" element={<RutaProtegida />}>
         <Route index element={<Proyectos />} />
         <Route path="crear-proyecto" element={<NuevoProyecto />} />
+        <Route path=":id" element={<Proyecto />} />
       </Route>
     </Routes>
   );

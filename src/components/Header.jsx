@@ -1,6 +1,17 @@
 import { Link } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
+import { useProyectos } from '../hooks/useProyectos';
 
 export const Header = () => {
+  const { setAuth } = useAuth();
+  const { setProyectos } = useProyectos();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setAuth({});
+    setProyectos([]);
+  };
+
   return (
     <header className="px-4 py-5 bg-white border-b">
       <div className="flex flex-col md:flex-row md:justify-between  gap-5">
@@ -14,7 +25,10 @@ export const Header = () => {
           <Link to="/proyectos" className="font-bold uppercase">
             Proyectos
           </Link>
-          <button className="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 uppercase rounded-md">
+          <button
+            className="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 uppercase rounded-md"
+            onClick={handleLogout}
+          >
             Cerrar Sesión
           </button>
         </div>

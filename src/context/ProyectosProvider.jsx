@@ -1,8 +1,7 @@
-import { createContext, useState } from 'react';
+import { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clienteAxios from '../config/clienteAxios';
 import { Slide, toast } from 'react-toastify';
-import { useEffect } from 'react';
 
 export const ProyectosContext = createContext();
 
@@ -35,15 +34,53 @@ export const ProyectosProvider = ({ children }) => {
   }, []);
 
   const submitProyecto = async (proyecto) => {
-    if (!token) return;
+    if (proyecto.id) {
+      await editarProyecto(proyecto);
+    } else {
+      await nuevoProyecto(proyecto);
+    }
+  };
 
+  const editarProyecto = async (proyecto) => {
+    if (!token) return;
     const config = {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     };
+    try {
+      const { data } = await clienteAxios.put(
+        `/proyectos/${proyecto.id}`,
+        proyecto,
+        config
+      );
 
+      const proyectosActualizados = proyectos.map((proyectoState) =>
+        proyectoState._id === data._id ? data : proyectoState
+      );
+      setProyectos(proyectosActualizados);
+      toast.success('Proyecto editado correctamente', {
+        transition: Slide,
+        theme: 'colored',
+        autoClose: 3000,
+      });
+      setTimeout(() => {
+        navigate('/proyectos');
+      }, 4000);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const nuevoProyecto = async (proyecto) => {
+    if (!token) return;
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    };
     try {
       const { data } = await clienteAxios.post('/proyectos', proyecto, config);
       setProyectos([...proyectos, data]);
@@ -52,7 +89,6 @@ export const ProyectosProvider = ({ children }) => {
         theme: 'colored',
         autoClose: 3000,
       });
-
       setTimeout(() => {
         navigate('/proyectos');
       }, 4000);

@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { createContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import clienteAxios from '../config/clienteAxios';
 
 export const AuthContext = createContext();
@@ -8,7 +7,6 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({});
   const [cargando, setCargando] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const autenticarUsuario = async () => {

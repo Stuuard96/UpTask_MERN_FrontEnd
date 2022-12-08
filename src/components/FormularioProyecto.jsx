@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Slide, toast } from 'react-toastify';
 import { useProyectos } from '../hooks/useProyectos';
 
@@ -10,9 +12,23 @@ const initialForm = {
 };
 
 export const FormularioProyecto = () => {
+  const params = useParams();
+  const { submitProyecto, proyecto } = useProyectos();
   const [form, setForm] = useState(initialForm);
+  const [id, setId] = useState(null);
   const { nombre, descripcion, fechaEntrega, cliente } = form;
-  const { submitProyecto } = useProyectos();
+
+  useEffect(() => {
+    if (params.id) {
+      setForm({
+        nombre: proyecto.nombre,
+        descripcion: proyecto.descripcion,
+        fechaEntrega: proyecto.fechaEntrega?.split('T')[0],
+        cliente: proyecto.cliente,
+      });
+      setId(params.id);
+    }
+  }, []);
 
   const handleChange = ({ target }) => {
     const { name, value } = target;
@@ -34,8 +50,9 @@ export const FormularioProyecto = () => {
       return;
     }
 
-    await submitProyecto(form);
+    await submitProyecto({ ...form, id });
     setForm(initialForm);
+    setId(null);
   };
 
   return (
@@ -112,7 +129,7 @@ export const FormularioProyecto = () => {
       <input
         type="submit"
         className="bg-sky-600 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-sky-700 cursor-pointer rounded-lg"
-        value="Crear Proyecto"
+        value={params.id ? 'Editar Proyecto' : 'Crear Proyecto'}
       />
     </form>
   );

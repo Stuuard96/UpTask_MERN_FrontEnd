@@ -10,7 +10,10 @@ export const ProyectosProvider = ({ children }) => {
   const navigate = useNavigate();
   const [proyectos, setProyectos] = useState([]);
   const [proyecto, setProyecto] = useState({});
+  const [tarea, setTarea] = useState({});
   const [cargando, setCargando] = useState(false);
+  const [modalFormularioTarea, setModalFormularioTarea] = useState(false);
+  const [modalEliminarTarea, setModalEliminarTarea] = useState(false);
 
   useEffect(() => {
     const obtenerProyectos = async () => {
@@ -31,7 +34,7 @@ export const ProyectosProvider = ({ children }) => {
       }
     };
     obtenerProyectos();
-  }, []);
+  }, [token]);
 
   const submitProyecto = async (proyecto) => {
     if (proyecto.id) {
@@ -118,6 +121,148 @@ export const ProyectosProvider = ({ children }) => {
     }
   };
 
+  const eliminarProyecto = async (id) => {
+    if (!token) return;
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const { data } = await clienteAxios.delete(`/proyectos/${id}`, config);
+      const proyectosActualizados = proyectos.filter(
+        (proyectoState) => proyectoState._id !== id
+      );
+      setProyectos(proyectosActualizados);
+      toast.success(data.msg, {
+        transition: Slide,
+        theme: 'colored',
+        autoClose: 3000,
+      });
+      setTimeout(() => {
+        navigate('/proyectos');
+      }, 4000);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleModalTarea = () => {
+    setModalFormularioTarea(!modalFormularioTarea);
+    setTarea({});
+  };
+
+  const handleModalEditarTarea = (tarea) => {
+    setTarea(tarea);
+    setModalFormularioTarea(!modalFormularioTarea);
+  };
+
+  const handleModalEliminarTarea = (tarea) => {
+    if (tarea._id) {
+      setTarea(tarea);
+    } else {
+      setTarea({});
+    }
+    setModalEliminarTarea(!modalEliminarTarea);
+  };
+
+  const submitTarea = async (tarea) => {
+    if (tarea.id) {
+      await editarTarea(tarea);
+    } else {
+      await nuevaTarea(tarea);
+    }
+  };
+
+  const nuevaTarea = async (tarea) => {
+    if (!token) return;
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const { data } = await clienteAxios.post('/tareas', tarea, config);
+      const proyectoActualizado = { ...proyecto };
+      proyectoActualizado.tareas = [...proyecto.tareas, data];
+      setProyecto(proyectoActualizado);
+      toast.success('Tarea creada correctamente', {
+        transition: Slide,
+        theme: 'colored',
+        autoClose: 3000,
+      });
+      handleModalTarea();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const editarTarea = async (tarea) => {
+    if (!token) return;
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const { data } = await clienteAxios.put(
+        `/tareas/${tarea.id}`,
+        tarea,
+        config
+      );
+      const proyectoActualizado = { ...proyecto };
+      proyectoActualizado.tareas = proyectoActualizado.tareas.map(
+        (tareaState) => (tareaState._id === data._id ? data : tareaState)
+      );
+      setProyecto(proyectoActualizado);
+      toast.success('Tarea editada correctamente', {
+        transition: Slide,
+        theme: 'colored',
+        autoClose: 3000,
+      });
+      handleModalTarea();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const eliminarTarea = async () => {
+    if (!token) return;
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const { data } = await clienteAxios.delete(
+        `/tareas/${tarea._id}`,
+        config
+      );
+      const proyectoActualizado = { ...proyecto };
+      proyectoActualizado.tareas = proyectoActualizado.tareas.filter(
+        (tareaState) => tareaState._id !== tarea._id
+      );
+      setProyecto(proyectoActualizado);
+      toast.success(data.msg, {
+        transition: Slide,
+        theme: 'colored',
+        autoClose: 3000,
+      });
+      setModalEliminarTarea(false);
+      setTarea({});
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ProyectosContext.Provider
       value={{
@@ -127,6 +272,15 @@ export const ProyectosProvider = ({ children }) => {
         obtenerProyecto,
         proyecto,
         cargando,
+        eliminarProyecto,
+        modalFormularioTarea,
+        handleModalTarea,
+        submitTarea,
+        handleModalEditarTarea,
+        tarea,
+        handleModalEliminarTarea,
+        modalEliminarTarea,
+        eliminarTarea,
       }}
     >
       {children}

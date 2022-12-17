@@ -14,7 +14,7 @@ export const RutaProtegida = () => {
       {auth.nombre ? (
         <div className="bg-gray-100">
           <Header />
-          <div className="md:flex ">
+          <div className="md:flex aqui">
             <SideBar />
             <main className="flex-1 p-8">
               <Outlet />

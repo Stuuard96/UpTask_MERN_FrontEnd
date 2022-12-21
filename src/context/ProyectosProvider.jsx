@@ -12,8 +12,10 @@ export const ProyectosProvider = ({ children }) => {
   const [proyecto, setProyecto] = useState({});
   const [tarea, setTarea] = useState({});
   const [cargando, setCargando] = useState(false);
+  const [alerta, setAlerta] = useState({});
   const [modalFormularioTarea, setModalFormularioTarea] = useState(false);
   const [modalEliminarTarea, setModalEliminarTarea] = useState(false);
+  const [colaborador, setColaborador] = useState({});
 
   useEffect(() => {
     const obtenerProyectos = async () => {
@@ -36,11 +38,59 @@ export const ProyectosProvider = ({ children }) => {
     obtenerProyectos();
   }, [token]);
 
+  const obtenerProyecto = async (id) => {
+    setCargando(true);
+    if (!token) return;
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const { data } = await clienteAxios(`/proyectos/${id}`, config);
+      setProyecto(data);
+    } catch (error) {
+      setAlerta({
+        msg: error.response.data.msg,
+        error: true,
+      });
+    } finally {
+      setCargando(false);
+    }
+  };
+
   const submitProyecto = async (proyecto) => {
     if (proyecto.id) {
       await editarProyecto(proyecto);
     } else {
       await nuevoProyecto(proyecto);
+    }
+  };
+
+  const nuevoProyecto = async (proyecto) => {
+    if (!token) return;
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const { data } = await clienteAxios.post('/proyectos', proyecto, config);
+      setProyectos([...proyectos, data]);
+      toast.success('Proyecto creado correctamente', {
+        transition: Slide,
+        theme: 'colored',
+        autoClose: 3000,
+      });
+      setTimeout(() => {
+        navigate('/proyectos');
+      }, 4000);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -73,51 +123,6 @@ export const ProyectosProvider = ({ children }) => {
       }, 4000);
     } catch (error) {
       console.log(error);
-    }
-  };
-
-  const nuevoProyecto = async (proyecto) => {
-    if (!token) return;
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    try {
-      const { data } = await clienteAxios.post('/proyectos', proyecto, config);
-      setProyectos([...proyectos, data]);
-      toast.success('Proyecto creado correctamente', {
-        transition: Slide,
-        theme: 'colored',
-        autoClose: 3000,
-      });
-      setTimeout(() => {
-        navigate('/proyectos');
-      }, 4000);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const obtenerProyecto = async (id) => {
-    setCargando(true);
-    if (!token) return;
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
-    try {
-      const { data } = await clienteAxios(`/proyectos/${id}`, config);
-      setProyecto(data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setCargando(false);
     }
   };
 
@@ -263,6 +268,71 @@ export const ProyectosProvider = ({ children }) => {
     }
   };
 
+  const submitColaborador = async (email) => {
+    setCargando(true);
+    if (!token) return;
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const { data } = await clienteAxios.post(
+        `/proyectos/colaboradores`,
+        { email },
+        config
+      );
+      setColaborador(data);
+      toast.success(data.msg, {
+        transition: Slide,
+        theme: 'colored',
+        autoClose: 3000,
+      });
+    } catch (error) {
+      toast.error(error.response.data.msg, {
+        transition: Slide,
+        theme: 'colored',
+        autoClose: 3000,
+      });
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  const agregarColaborador = async (email) => {
+    if (!token) return;
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const { data } = await clienteAxios.post(
+        `/proyectos/colaboradores/${proyecto._id}`,
+        email,
+        config
+      );
+
+      toast.success(data.msg, {
+        transition: Slide,
+        theme: 'colored',
+        autoClose: 3000,
+      });
+
+      setColaborador({});
+    } catch (error) {
+      toast.error(error.response.data.msg, {
+        transition: Slide,
+        theme: 'colored',
+        autoClose: 3000,
+      });
+    }
+  };
+
   return (
     <ProyectosContext.Provider
       value={{
@@ -272,6 +342,8 @@ export const ProyectosProvider = ({ children }) => {
         obtenerProyecto,
         proyecto,
         cargando,
+        alerta,
+        setAlerta,
         eliminarProyecto,
         modalFormularioTarea,
         handleModalTarea,
@@ -281,6 +353,9 @@ export const ProyectosProvider = ({ children }) => {
         handleModalEliminarTarea,
         modalEliminarTarea,
         eliminarTarea,
+        submitColaborador,
+        colaborador,
+        agregarColaborador,
       }}
     >
       {children}

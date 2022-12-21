@@ -10,6 +10,7 @@ import {
   NuevoProyecto,
   Proyecto,
   EditarProyecto,
+  NuevoColaborador,
 } from '../paginas';
 
 export const AppRouter = () => {
@@ -26,6 +27,7 @@ export const AppRouter = () => {
       <Route path="/proyectos" element={<RutaProtegida />}>
         <Route index element={<Proyectos />} />
         <Route path="crear-proyecto" element={<NuevoProyecto />} />
+        <Route path="nuevo-colaborador/:id" element={<NuevoColaborador />} />
         <Route path=":id" element={<Proyecto />} />
         <Route path="editar/:id" element={<EditarProyecto />} />
       </Route>

@@ -16,6 +16,8 @@ export const ProyectosProvider = ({ children }) => {
   const [modalFormularioTarea, setModalFormularioTarea] = useState(false);
   const [modalEliminarTarea, setModalEliminarTarea] = useState(false);
   const [colaborador, setColaborador] = useState({});
+  const [modalEliminarColaborador, setModalEliminarColaborador] =
+    useState(false);
 
   useEffect(() => {
     const obtenerProyectos = async () => {
@@ -296,6 +298,7 @@ export const ProyectosProvider = ({ children }) => {
         theme: 'colored',
         autoClose: 3000,
       });
+      setColaborador({});
     } finally {
       setCargando(false);
     }
@@ -330,6 +333,55 @@ export const ProyectosProvider = ({ children }) => {
         theme: 'colored',
         autoClose: 3000,
       });
+      setColaborador({});
+    }
+  };
+
+  const handleModalEliminarColaborador = (colaborador) => {
+    if (colaborador._id) {
+      setColaborador(colaborador);
+    } else {
+      setColaborador({});
+    }
+    setModalEliminarColaborador(!modalEliminarColaborador);
+  };
+
+  const eliminarColaborador = async () => {
+    if (!token) return;
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const { data } = await clienteAxios.post(
+        `/proyectos/eliminar-colaborador/${proyecto._id}`,
+        { id: colaborador._id },
+        config
+      );
+
+      const proyectoActualizado = { ...proyecto };
+      proyectoActualizado.colaboradores =
+        proyectoActualizado.colaboradores.filter(
+          (colaboradorState) => colaboradorState._id !== colaborador._id
+        );
+      setProyecto(proyectoActualizado);
+      toast.success(data.msg, {
+        transition: Slide,
+        theme: 'colored',
+        autoClose: 3000,
+      });
+      setModalEliminarColaborador(false);
+      setColaborador({});
+    } catch (error) {
+      // toast.error(error.response.data.msg, {
+      //   transition: Slide,
+      //   theme: 'colored',
+      //   autoClose: 3000,
+      // });
+      console.log(error);
     }
   };
 
@@ -356,6 +408,9 @@ export const ProyectosProvider = ({ children }) => {
         submitColaborador,
         colaborador,
         agregarColaborador,
+        handleModalEliminarColaborador,
+        modalEliminarColaborador,
+        eliminarColaborador,
       }}
     >
       {children}

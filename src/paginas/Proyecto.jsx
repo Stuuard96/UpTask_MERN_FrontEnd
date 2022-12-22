@@ -4,6 +4,8 @@ import { useProyectos } from '../hooks/useProyectos';
 import { Tarea } from '../components/Tarea';
 import { ModalEliminarTarea } from '../components/ModalEliminarTarea';
 import { ModalFormularioTarea } from '../components/ModalFormularioTarea';
+import { Colaborador } from '../components/Colaborador';
+import { ModalEliminarColaborador } from '../components/ModalEliminarColaborador';
 export const Proyecto = () => {
   const params = useParams();
   const { obtenerProyecto, proyecto, cargando, handleModalTarea } =
@@ -85,8 +87,20 @@ export const Proyecto = () => {
               Añadir
             </Link>
           </div>
+          <div className="bg-white shadow mt-8 rounded-lg">
+            {proyecto.colaboradores?.length ? (
+              proyecto.colaboradores?.map((colaborador) => (
+                <Colaborador key={colaborador._id} colaborador={colaborador} />
+              ))
+            ) : (
+              <p className="text-center my-5 p-7">
+                No hay Colaboradores en este proyecto
+              </p>
+            )}
+          </div>
           <ModalFormularioTarea />
           <ModalEliminarTarea />
+          <ModalEliminarColaborador />
         </>
       )}
     </>

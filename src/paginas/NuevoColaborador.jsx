@@ -29,7 +29,7 @@ export const NuevoColaborador = () => {
         Añadir Colaborador(a) al Proyecto: {proyecto.nombre}
       </h1>
       <div className="mt-10 flex justify-center">
-        <FormularioColaborador />
+        <FormularioColaborador colaborador={colaborador} />
       </div>
       {cargando ? (
         <p className="text-center">Cargando...</p>

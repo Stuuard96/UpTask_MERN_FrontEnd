@@ -17,7 +17,6 @@ export const FormularioColaborador = () => {
       return;
     }
     await submitColaborador(email);
-    // setEmail('');
   };
 
   return (

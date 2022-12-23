@@ -54,11 +54,16 @@ export const ProyectosProvider = ({ children }) => {
     try {
       const { data } = await clienteAxios(`/proyectos/${id}`, config);
       setProyecto(data);
+      setAlerta({});
     } catch (error) {
+      navigate('/proyectos');
       setAlerta({
         msg: error.response.data.msg,
         error: true,
       });
+      setTimeout(() => {
+        setAlerta({});
+      }, 3000);
     } finally {
       setCargando(false);
     }
@@ -152,7 +157,11 @@ export const ProyectosProvider = ({ children }) => {
         navigate('/proyectos');
       }, 4000);
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data.msg, {
+        transition: Slide,
+        theme: 'colored',
+        autoClose: 3000,
+      });
     }
   };
 
@@ -368,19 +377,45 @@ export const ProyectosProvider = ({ children }) => {
           (colaboradorState) => colaboradorState._id !== colaborador._id
         );
       setProyecto(proyectoActualizado);
+      setColaborador({});
+      setModalEliminarColaborador(false);
       toast.success(data.msg, {
         transition: Slide,
         theme: 'colored',
         autoClose: 3000,
       });
-      setModalEliminarColaborador(false);
-      setColaborador({});
     } catch (error) {
-      // toast.error(error.response.data.msg, {
-      //   transition: Slide,
-      //   theme: 'colored',
-      //   autoClose: 3000,
-      // });
+      toast.error(error.response.data.msg, {
+        transition: Slide,
+        theme: 'colored',
+        autoClose: 3000,
+      });
+      setColaborador({});
+    }
+  };
+
+  const completarTarea = async (id) => {
+    if (!token) return;
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    try {
+      const { data } = await clienteAxios.post(
+        `/tareas/estado/${id}`,
+        {},
+        config
+      );
+      const proyectoActualizado = { ...proyecto };
+      proyectoActualizado.tareas = proyectoActualizado.tareas.map(
+        (tareaState) => (tareaState._id === data._id ? data : tareaState)
+      );
+      setProyecto(proyectoActualizado);
+      setTarea({});
+    } catch (error) {
       console.log(error);
     }
   };
@@ -411,6 +446,7 @@ export const ProyectosProvider = ({ children }) => {
         handleModalEliminarColaborador,
         modalEliminarColaborador,
         eliminarColaborador,
+        completarTarea,
       }}
     >
       {children}

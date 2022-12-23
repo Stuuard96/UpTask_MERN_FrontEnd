@@ -1,13 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Slide, toast } from 'react-toastify';
 import { useProyectos } from '../hooks/useProyectos';
 
-export const FormularioColaborador = () => {
+export const FormularioColaborador = ({ colaborador }) => {
   const { submitColaborador } = useProyectos();
   const [email, setEmail] = useState('');
+  const emailInput = useRef(null);
+
+  useEffect(() => {
+    if (colaborador?.email) {
+      setEmail('');
+    }
+  }, [colaborador]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    emailInput.current.focus();
     if (email.trim() === '') {
       toast.error('El email es obligatorio', {
         transition: Slide,
@@ -37,6 +45,8 @@ export const FormularioColaborador = () => {
           placeholder="Email del usuario a buscar"
           className="w-full border mt-2 p-2 border-gray-300 rounded-lg focus:outline-none focus:border-indigo-400"
           name="email"
+          autoFocus
+          ref={emailInput}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />

@@ -5,7 +5,7 @@ export const Alerta = ({ alerta }) => {
     <div
       className={`${
         alerta.error ? 'bg-red-500' : 'bg-sky-400'
-      } p-3 text-white text-center font-bold rounded-lg uppercase text-sm `}
+      } mt-5 p-3 text-white text-center font-bold rounded-lg uppercase text-sm `}
     >
       {alerta.msg}
     </div>

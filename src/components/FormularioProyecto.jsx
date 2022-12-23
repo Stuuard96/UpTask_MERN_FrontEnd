@@ -58,7 +58,7 @@ export const FormularioProyecto = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white py-10 px-5 md:w-1/2 rounded-lg shadow"
+      className="bg-white py-10 px-5 md:w-10/12 lg:w-1/2 rounded-lg shadow"
     >
       <div className="mb-5">
         <label

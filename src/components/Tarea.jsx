@@ -7,16 +7,22 @@ export const Tarea = ({ tarea }) => {
     useProyectos();
   const { _id, nombre, descripcion, fechaEntrega, prioridad, estado } = tarea;
   const { admin } = useAdmin();
+  console.log(tarea);
 
   return (
-    <div className="border-b p-5 flex flex-col gap-3 md:flex-row  justify-between items-center">
-      <div className="flex flex-col gap-1">
+    <div className="border-b p-5 flex flex-col gap-3 md:flex-row  justify-between md:items-center">
+      <div className="flex flex-col items-start gap-1">
         <p className="font-bold text-gray-700 text-xl">{nombre}</p>
         <p className="text-gray-500 uppercase text-sm">{descripcion}</p>
         <p className="text-lg">{formatearFecha(fechaEntrega)}</p>
         <p className="text-gray-600">Prioridad: {prioridad}</p>
+        {estado && (
+          <p className="text-xs bg-green-600 uppercase p-1 text-white rounded-lg">
+            Completado por: {tarea?.completado?.nombre}
+          </p>
+        )}
       </div>
-      <div className="flex gap-2">
+      <div className="flex md:flex-col lg:flex-row gap-2">
         {admin && (
           <button
             className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"

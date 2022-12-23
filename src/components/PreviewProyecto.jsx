@@ -6,7 +6,7 @@ export const PreviewProyecto = ({ proyecto }) => {
   const { auth } = useAuth();
 
   return (
-    <div className="border-b p-5 flex gap-3 items-center">
+    <div className="border-b p-5 flex flex-col md:flex-row gap-3">
       <p>
         {nombre}
         <span className="block text-gray-500 uppercase text-sm">{cliente}</span>
@@ -18,7 +18,7 @@ export const PreviewProyecto = ({ proyecto }) => {
       )}
       <Link
         to={`${_id}`}
-        className="flex-1 text-gray-600 font-semibold hover:text-gray-900 uppercase text-end"
+        className="flex-1 text-gray-600 font-semibold hover:text-gray-900 uppercase md:text-end"
       >
         Ver Proyecto
       </Link>

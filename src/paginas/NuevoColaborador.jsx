@@ -36,11 +36,11 @@ export const NuevoColaborador = () => {
       ) : (
         colaborador?._id && (
           <div className="mt-10 flex justify-center">
-            <div className="bg-white py-8 px-5 md:w-1/2 rounded-lg shadow">
+            <div className="bg-white py-8 px-5 md:w-10/12 lg:w-1/2 rounded-lg shadow w-full">
               <h2 className="text-center mb-8 text-2xl font-bold">
                 Resultado:
               </h2>
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
                 <p className="font-bold text-gray-800">{colaborador.nombre}</p>
                 <button
                   className="bg-slate-500 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded"

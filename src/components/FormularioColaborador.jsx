@@ -29,7 +29,7 @@ export const FormularioColaborador = ({ colaborador }) => {
 
   return (
     <form
-      className="bg-white py-8 px-5 md:w-1/2 rounded-lg shadow"
+      className="bg-white py-8 px-5 md:w-10/12 lg:w-1/2 rounded-lg shadow w-full"
       onSubmit={handleSubmit}
     >
       <div className="mb-4">

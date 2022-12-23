@@ -16,13 +16,18 @@ export const Header = () => {
     <header className="px-4 py-5 bg-white border-b">
       <div className="flex flex-col md:flex-row md:justify-between  gap-5">
         <h2 className="text-4xl text-sky-600 font-black text-center">UpTask</h2>
-        <input
-          type="search"
-          placeholder="Buscar Proyecto"
-          className="lg:w-96 block p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-sky-600"
-        />
-        <div className="flex items-center justify-center md:justify-end gap-4">
-          <Link to="/proyectos" className="font-bold uppercase">
+
+        <div className="flex flex-col sm:flex-row items-center justify-center md:justify-end gap-4">
+          <button
+            type="button"
+            className="text-gray-600 hover:text-gray-900 font-bold uppercase"
+          >
+            Buscar Proyecto
+          </button>
+          <Link
+            to="/proyectos"
+            className="text-gray-600 hover:text-gray-900 font-bold uppercase"
+          >
             Proyectos
           </Link>
           <button

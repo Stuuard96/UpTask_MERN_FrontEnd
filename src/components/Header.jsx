@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useProyectos } from '../hooks/useProyectos';
+import Busqueda from './Busqueda';
 
 export const Header = () => {
   const { setAuth } = useAuth();
-  const { setProyectos } = useProyectos();
+  const { setProyectos, handleBuscador, buscador } = useProyectos();
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -21,6 +22,7 @@ export const Header = () => {
           <button
             type="button"
             className="text-gray-600 hover:text-gray-900 font-bold uppercase"
+            onClick={handleBuscador}
           >
             Buscar Proyecto
           </button>
@@ -36,6 +38,7 @@ export const Header = () => {
           >
             Cerrar Sesión
           </button>
+          <Busqueda />
         </div>
       </div>
     </header>

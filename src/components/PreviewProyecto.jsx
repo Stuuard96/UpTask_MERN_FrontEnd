@@ -12,7 +12,7 @@ export const PreviewProyecto = ({ proyecto }) => {
         <span className="block text-gray-500 uppercase text-sm">{cliente}</span>
       </p>
       {auth._id !== creador && (
-        <p className=" p-1 text-xs rounded-lg text-white bg-green-500 font-bold uppercase">
+        <p className=" p-1 text-xs rounded-lg text-white bg-green-500 font-bold uppercase self-start md:self-center">
           Colaborador
         </p>
       )}

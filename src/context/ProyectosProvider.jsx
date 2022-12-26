@@ -18,6 +18,7 @@ export const ProyectosProvider = ({ children }) => {
   const [colaborador, setColaborador] = useState({});
   const [modalEliminarColaborador, setModalEliminarColaborador] =
     useState(false);
+  const [buscador, setBuscador] = useState(false);
 
   useEffect(() => {
     const obtenerProyectos = async () => {
@@ -420,6 +421,10 @@ export const ProyectosProvider = ({ children }) => {
     }
   };
 
+  const handleBuscador = () => {
+    setBuscador(!buscador);
+  };
+
   return (
     <ProyectosContext.Provider
       value={{
@@ -447,6 +452,8 @@ export const ProyectosProvider = ({ children }) => {
         modalEliminarColaborador,
         eliminarColaborador,
         completarTarea,
+        buscador,
+        handleBuscador,
       }}
     >
       {children}

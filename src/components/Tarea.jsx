@@ -7,7 +7,6 @@ export const Tarea = ({ tarea }) => {
     useProyectos();
   const { _id, nombre, descripcion, fechaEntrega, prioridad, estado } = tarea;
   const { admin } = useAdmin();
-  console.log(tarea);
 
   return (
     <div className="border-b p-5 flex flex-col gap-3 md:flex-row  justify-between md:items-center">

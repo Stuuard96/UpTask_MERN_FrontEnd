@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import io from 'socket.io-client';
 import { Link, useParams } from 'react-router-dom';
 import { useProyectos } from '../hooks/useProyectos';
 import { Tarea } from '../components/Tarea';
@@ -6,19 +7,59 @@ import { ModalEliminarTarea } from '../components/ModalEliminarTarea';
 import { ModalFormularioTarea } from '../components/ModalFormularioTarea';
 import { Colaborador } from '../components/Colaborador';
 import { ModalEliminarColaborador } from '../components/ModalEliminarColaborador';
-import { Alerta } from '../components/Alerta';
 import { useAdmin } from '../hooks/useAdmin';
+
+let socket;
 
 export const Proyecto = () => {
   const params = useParams();
-  const { obtenerProyecto, proyecto, cargando, handleModalTarea, alerta } =
-    useProyectos();
+  const {
+    obtenerProyecto,
+    proyecto,
+    cargando,
+    handleModalTarea,
+    submitTareasProyecto,
+    eliminarTareaProyecto,
+    editarTareaProyecto,
+    cambiarEstadoTarea,
+  } = useProyectos();
   const { admin } = useAdmin();
   const { nombre } = proyecto;
 
   useEffect(() => {
     obtenerProyecto(params.id);
   }, [params.id]);
+
+  useEffect(() => {
+    socket = io(import.meta.env.VITE_BACKEND_URL);
+    socket.emit('abrirProyecto', params.id);
+  }, []);
+
+  useEffect(() => {
+    socket.on('tareaAgregada', (tareaAgregada) => {
+      if (tareaAgregada.proyecto === proyecto._id) {
+        submitTareasProyecto(tareaAgregada);
+      }
+    });
+
+    socket.on('tareaEliminada', (tareaEliminada) => {
+      if (tareaEliminada.proyecto === proyecto._id) {
+        eliminarTareaProyecto(tareaEliminada);
+      }
+    });
+
+    socket.on('tareaEditada', (tareaEditada) => {
+      if (tareaEditada.proyecto._id === proyecto._id) {
+        editarTareaProyecto(tareaEditada);
+      }
+    });
+
+    socket.on('estadoCambiado', (estadoCambiado) => {
+      if (estadoCambiado.proyecto._id === proyecto._id) {
+        cambiarEstadoTarea(estadoCambiado);
+      }
+    });
+  });
 
   if (cargando) return <p>Cargando...</p>;
 

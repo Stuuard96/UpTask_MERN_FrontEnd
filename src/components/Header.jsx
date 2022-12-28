@@ -4,13 +4,13 @@ import { useProyectos } from '../hooks/useProyectos';
 import Busqueda from './Busqueda';
 
 export const Header = () => {
-  const { setAuth } = useAuth();
-  const { setProyectos, handleBuscador, buscador } = useProyectos();
+  const { handleBuscador, cerrarSesionProyectos } = useProyectos();
+  const { cerrarSesionAuth } = useAuth();
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    setAuth({});
-    setProyectos([]);
+    cerrarSesionAuth();
+    cerrarSesionProyectos();
   };
 
   return (
